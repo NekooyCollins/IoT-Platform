@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title>Dashboard Demo</title>
+
+        <!-- Bootstrap core CSS -->
+        <link href="../default/static/CSS/bootstrap.min.css" rel="stylesheet">
+        <link href="../default/static/CSS/buttons.css" rel="stylesheet">
+        <link href="../default/static/CSS/bootstrapSwitch.css" rel="stylesheet">
+
+        <!-- AngularJS -->
+        <link href="http://apps.bdimg.com/libs/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
+        <script src="http://apps.bdimg.com/libs/jquery/2.0.0/jquery.min.js"></script>
+        <script src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+        <script src= "http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+
+        <!-- Custom styles for this template -->
+        <link href="../default/static/CSS/dashboard.css" rel="stylesheet">
+
+        <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+        <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+        <script src="../default/static/JS/ie-emulation-modes-warning.js"></script>
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+          <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.js"></script>
+          <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+  </head>
+
+  <body ng-app = "myApp" ng-controller = "deviceCtrl">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#"><b>FelisM</b></a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/logout/"><b>Log out</b></a></li>  <!-- href = "#" -->
+          </ul>
+          <form class="navbar-form navbar-right">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder = "Search by SN" ng-model = "curSearch">
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button" ng-click = "search()">
+                  <span class="glyphicon glyphicon-search"></span>
+                </button>
+              </span>
+            </div>
+          </form>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li class="active"><a href="#">Overview</a></li>
+            <li><a href="#">Reports</a></li>
+            <li><a href="#">Analytics</a></li>
+            <li><a href="/history/">History</a></li>
+          </ul>
+          <ul class="nav nav-sidebar">
+            <li><a href="">Search by SN</a></li>
+            <li><a href="">Equipment typeB</a></li>
+            <li><a href="">Equipment typeC</a></li>
+            <li><a href="">Equipment typeD</a></li>
+          </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="page-header">Equipments</h1>
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <!--<th>ID</th>-->
+                  <th>SN</th>
+                  <th>Name</th>
+                  <th>Temperature(℃)</th>
+                  <th>Update Time</th>
+                  <th>Warning</th>
+                  <th>Switch</th>
+                </tr>
+              </thead>
+              <tbody ng-repeat = "x in deviceList">
+                <tr>
+                    <td class = "hidden" ng-bind = "x.id"></td>
+                    <!--<td>[[ $index + 1 ]]</td>-->
+                    <td ng-bind = "x.identifier"></td>
+                    <td ng-bind = "x.name"></td>
+                    <td ng-bind = "x.physicalquantity"></td>
+                    <td ng-bind = "x.updatetime"></td>
+                    <td ng-bind = "x.alert"></td>
+                    <!--<td ng-bind = "x.sw"></td>-->
+                    <td>
+                        <a id = "switch" type="button" name = "sw" class="button button-small button-box" ng-bind = "x.onoff" ng-style = "switchStyle" ng-click = "switch($index)"></a>
+                    </td>
+                    <td style="text-align: right;">
+                        <!--<a type="button" class="button button-small button-box" href="#"></a>-->
+                        <a type="button" ng-cloak ng-click = "edit($index)" class="button button-primary button-small button-circle" href="#">/</a>
+                        <a type="button" ng-cloak ng-click = "del($index)" class="button button-caution button-small button-circle" href="#">-</a>
+                    </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="col-md-offset-11" style="float: right; margin-right: 8px;">
+              <a type="button" ng-cloak ng-click = "add()" class="button button-action button-middle button-circle" href="#">+</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap modal -->
+    <div class = "modal fade" id = "modal_form" role = "dialog">
+        <div class = "modal-dialog">
+            <div class = "modal-content">
+                <div class = "modal-header">
+                    <button type = "button" class = "close" data-dismiss = "modal" aria-label = "Close"><span aria-hidden = "true">&times;</span></button>
+                    <h3 class = "modal-title" ng-bind = "title"></h3>
+                </div>
+                <div class = "modal-body form">
+                    <form action = "#" id = "form" class = "form-horizontal">
+                        <input type = "hidden" ng-bind = "curid" name = "id"/>
+                        <div class = "form-body">
+                            <label class = "control-label col-md-3">SN</label>
+                            <div class = "col-md-9">
+                                <input name = "sn" class = "form-control" type = "text" ng-model = "curSN">
+                            </div>
+                            <label class = "control-label col-md-3">NAME</label>
+                            <div class = "col-md-9">
+                                <input name = "name" class = "form-control" type = "text" ng-model = "curName">
+                            </div>
+                            <label class = "control-label col-md-3">ALARM LEVEL</label>
+                            <div class = "col-md-9">
+                                <input name = "alertline" class = "form-control" type = "number" ng-model = "curAlertline">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class = "modal-footer">
+                    <button type = "button" id = "btnSave" ng-click = "save()" class = "btn btn-primary">Save</button>
+                    <button type = "button" class = "btn btn-danger" data-dismiss = "modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class = "modal fade" id = "modal_result" role = "dialog">
+        <div class = "modal-dialog">
+            <div class = "modal-content">
+                <div class = "modal-header">
+                    <button type = "button" class = "close" data-dismiss = "modal" aria-label = "Close"><span aria-hidden = "true">&times;</span></button>
+                    <h3 class = "modal-title" ng-bind = "title"></h3>
+                </div>
+                <div class = "modal-body form">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                            <!--<th>ID</th>-->
+                            <th>SN</th>
+                            <th>Name</th>
+                            <th>Temperature(℃)</th>
+                            <th>Update Time</th>
+                            <th>Warning</th>
+                            <th>Switch</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                            <!--<td class = "hidden" ng-model = "curId"></td>-->
+                            <!--<td>[[ $index + 1 ]]</td>-->
+                            <td ng-bind = "curSN"></td>
+                            <td ng-bind = "curName"></td>
+                            <td ng-bind = "curTemperature"></td>
+                            <td ng-bind = "curUpdatetime"></td>
+                            <td ng-bind = "curAlert"></td>
+                            <!--<td ng-bind = "x.sw"></td>-->
+                            <td>
+                                <a id = "switch" type="button" name = "sw" class="button button-small button-box" ng-bind = "curOnoff"></a>
+                            </td>
+                            </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="../default/static/JS/jquery.min.js"></script>
+    <script src="../default/static/JS/bootstrap.min.js"></script>
+    <script src="../default/static/JS/docs.min.js"></script>
+    <script src="../default/static/JS/bootstrapSwitch.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../default/static/JS/ie10-viewport-bug-workaround.js"></script>
+
+    <script>
+        var app = angular.module('myApp', []).config(function($interpolateProvider){
+            $interpolateProvider.startSymbol('[[');
+            $interpolateProvider.endSymbol(']]');
+        });
+        app.controller('deviceCtrl', function($scope, $http, $interval){
+            $http.get("/list/").success(function(response){$scope.deviceList = response.devicelist;});
+
+            var timer = $interval(function(){
+                var url = "/update/";
+                var sent = 0;
+                $http.post(url).success(function(response){$scope.deviceList = response.devicelist;});
+                //for (var index = 0; index < $scope.deviceList.length; index++)
+                //{
+                    $http.post("/sendemail/").success(function(response){});
+                  //              sent = 1;
+                  //          });  // 发送成功怎样提示？？？？？？？？
+                //}*/
+
+            }, 3000);
+            timer.then(success)
+            function success(){};
+
+            $scope.search = function(){
+                $scope.title = "Search result"
+                $scope.curSN = ''
+                $scope.curName = ''
+                $scope.curTemperature = ''
+                $scope.curUpdatetime = ''
+                $scope.curAlert = ''
+                $scope.curOnoff = ''
+
+                $http.post("/search/", {"sn": $scope.curSearch}).success(function(response){$scope.curSN = response.device.identifier, $scope.curName = response.device.name,
+                $scope.curTemperature = response.device.physicalquantity, $scope.curUpdatetime = response.device.updatetime,
+                $scope.curAlert = response.device.Alert, $scope.curOnoff = response.device.onoff, $scope.curSearch = ''});
+
+                $scope.curSearch = ''
+                var element = angular.element('#modal_result');
+                element.modal('show');
+            };
+
+            $scope.add = function(){
+                $scope.title = "Add device"
+                $scope.save_method = 'add'
+                $scope.curSN = ''
+                $scope.curName = ''
+                $scope.curAlertline = ''
+                var element = angular.element('#modal_form');
+                element.modal('show');
+            };
+            $scope.edit = function(index){
+                $scope.title = "Edit device"
+                $scope.save_method = 'update'
+                $scope.curindex = index
+                $scope.curSN = $scope.deviceList[index].identifier
+                $scope.curName = $scope.deviceList[index].name
+                $scope.curAlertline = $scope.deviceList[index].alertline
+                $scope.curid = $scope.deviceList[index].id
+                var element = angular.element('#modal_form');
+                element.modal('show');
+            };
+            $scope.save = function(){
+                var url;
+                if ($scope.save_method == 'add'){
+                    url = "/add/";
+                    $http.post(url, {"sn": $scope.curSN, "name": $scope.curName, "alertline": $scope.curAlertline}).success(function(response){$scope.deviceList.push(response.device)});
+                }
+                else{
+                    url = "/edit/";
+                    $http.post(url, {"id":$scope.curid, "sn": $scope.curSN, "name": $scope.curName,
+                        "alertline": $scope.curAlertline}).success(function(response)
+                    {$scope.deviceList[$scope.curindex].identifier = response.device.identifier, $scope.deviceList[$scope.curindex].name = response.device.name, $scope.deviceList[$scope.curindex].alertline = response.device.alertline});
+                }
+                var element = angular.element('#modal_form');
+                element.modal('hide');
+            };
+            $scope.del = function(index){
+                $http.get("/del/?id=" + $scope.deviceList[index].id).success(function(response){
+                $scope.deviceList.splice(index, 1);
+                });
+            };
+            $scope.switch = function(index){
+                var url = "/switch/";
+                $scope.curindex = index
+                $http.post(url, {"id": $scope.deviceList[$scope.curindex].id, "sw": !$scope.deviceList[$scope.curindex].sw}).success(function(response){$scope.deviceList[$scope.curindex].sw = response.device.switch});
+            };
+        });
+    </script>
+  </body>
+</html>

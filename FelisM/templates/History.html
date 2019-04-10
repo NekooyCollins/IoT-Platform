@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Dashboard History</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../default/static/CSS/bootstrap.min.css" rel="stylesheet">
+    <link href="../default/static/CSS/buttons.css" rel="stylesheet">
+    <link href="../default/static/CSS/bootstrapSwitch.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="../default/static/CSS/dashboard.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="../default/static/JS/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#"><b>FelisM</b></a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/logout/"><b>Log out</b></a></li>
+          </ul>
+          <form class="navbar-form navbar-right">
+            <div class="input-group">
+              <input type="text" class="form-control">
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button">
+                  <span class="glyphicon glyphicon-search"></span>
+                </button>
+              </span>
+            </div>
+          </form>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li><a href="/dashboard/">Overview</a></li>
+            <li><a href="#">Reports</a></li>
+            <li><a href="#">Analytics</a></li>
+            <li class="active"><a href="#">History</a></li>
+          </ul>
+          <ul class="nav nav-sidebar">
+            <li><a href="">Equipment typeA</a></li>
+            <li><a href="">Equipment typeB</a></li>
+            <li><a href="">Equipment typeC</a></li>
+            <li><a href="">Equipment typeD</a></li>
+          </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="page-header">History Record</h1>
+
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>SN</th>
+                  <th>Name</th>
+                  <th>Temperature</th>
+                  <th>Update Time</th>
+                  <th>Warning</th>
+                  <!-- <th>Switch</th> -->
+                </tr>
+              </thead>
+              <tbody>
+              {% for history in historylist %}
+              <tr>
+                  <td class = "hidden">{{ history.id }}</td>
+                    <!--<td>[[ $index + 1 ]]</td>-->
+                    <td>{{ history.identifier }}</td>
+                    <td>{{ history.name }}</td>
+                    <td>{{ history.physicalquantity }}</td>
+                    <td>{{ history.updatetime }}</td>
+                    <td>{{ history.alert }}</td>
+                    <!--<td ng-bind = "x.switch"></td>-->
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="../default/static/JS/jquery.min.js"></script>
+    <script src="../default/static/JS/bootstrap.min.js"></script>
+    <script src="../default/static/JS/docs.min.js"></script>
+    <script src="../default/static/JS/bootstrapSwitch.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../default/static/JS/ie10-viewport-bug-workaround.js"></script>
+
+  <!--<script>
+      var app = angular.module('historyApp', []).config(function($interpolateProvider){
+            $interpolateProvider.startSymbol('[[');
+            $interpolateProvider.endSymbol(']]');
+        });
+      app.controller('historyCtrl', function($scope, $http){
+            $http.get("/history/").success(function(response){$scope.historyList = response.historylist;});
+      });
+  </script>-->
+  </body>
+</html>
